@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="header" @click="showDetail"> -->
   <div class="header" @click="showDetail">
     <div class="content-wrapper">
       <div class="avatar">
@@ -201,6 +200,11 @@ export default {
     left: 0;
     z-index: -1;
     filter: blur(10px);
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
   }
 }
 </style>
