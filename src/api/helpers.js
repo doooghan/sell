@@ -1,22 +1,9 @@
-// import axios from "ts-axios-new";
+import axios from "ts-axios-new";
 
-// const ERR_OK = 0;
+const ERR_OK = 0;
 
-// // export function get(url) {
-// //   return function (params = {}) {
-// //     return axios
-// //       .get(url, { params })
-// //       .then((res) => {
-// //         const { errno, data } = res.data;
-// //         if (errno === ERR_OK) {
-// //           return data;
-// //         }
-// //       })
-// //       .catch(() => {});
-// //   };
-// // }
 // export function get(url) {
-//   return async function (params = {}) {
+//   return function (params = {}) {
 //     return axios
 //       .get(url, { params })
 //       .then((res) => {
@@ -25,29 +12,21 @@
 //           return data;
 //         }
 //       })
-//       .catch((e) => {
-//         console.error(e);
-//       });
+//       .catch(() => {});
 //   };
 // }
-
-import axios from "ts-axios-new";
-
-const baseUrl = "/";
-const ERR_OK = 0;
-
 export function get(url) {
-  return function (params = {}) {
+  return async function (params = {}) {
     return axios
-      .get(baseUrl + url, {
-        params,
-      })
+      .get(url, { params })
       .then((res) => {
         const { errno, data } = res.data;
         if (errno === ERR_OK) {
           return data;
         }
       })
-      .catch((e) => {});
+      .catch((e) => {
+        console.error(e);
+      });
   };
 }

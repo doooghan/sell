@@ -14,8 +14,7 @@
           {{ seller.description }}/{{ seller.deliveryTime }}分钟送达
         </div>
         <div v-if="seller.supports" class="support">
-          <!-- <support-ico :size="1" :type="seller.supports[0].type"></support-ico> -->
-          <span>减</span>
+          <SupportIco :size="1" :type="seller.supports[0].type" />
           <span class="text">{{ seller.supports[0].description }}</span>
         </div>
       </div>
@@ -36,6 +35,8 @@
 </template>
 
 <script>
+import SupportIco from '../../components/support-ico/support-ico.vue'
+
 export default {
   name: 'v-header',
   props: {
@@ -46,6 +47,7 @@ export default {
       },
     },
   },
+  components: { SupportIco },
   // data() {
   //   return {}
   // },
