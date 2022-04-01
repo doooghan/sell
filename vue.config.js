@@ -1,6 +1,7 @@
 const appData = require("./data.json");
 const { seller, goods, ratings } = appData;
 module.exports = {
+  lintOnSave: false,
   css: {
     loaderOptions: {
       stylus: {
