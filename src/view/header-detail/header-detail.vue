@@ -1,41 +1,43 @@
 <template>
-  <div class="header-detail">
-    <div class="detail-wrapper clear-fix">
-      <div class="detail-main">
-        <h1 class="name">{{ seller.name }}</h1>
-        <div class="star-wrapper">
-          <Star :size="48" :score="seller.score" />
-        </div>
+  <transition name="fade">
+    <div v-show="visible" class="header-detail">
+      <div class="detail-wrapper clear-fix">
+        <div class="detail-main">
+          <h1 class="name">{{ seller.name }}</h1>
+          <div class="star-wrapper">
+            <Star :size="48" :score="seller.score" />
+          </div>
 
-        <div class="title">
-          <div class="line"></div>
-          <div class="text">优惠信息</div>
-          <div class="line"></div>
-        </div>
-        <ul v-if="seller.supports" class="supports">
-          <li
-            v-for="support in seller.supports"
-            :key="support.id"
-            class="support-item"
-          >
-            <SupportIco :size="2" :type="support.type" />
-            <span class="text">{{ support.description }}</span>
-          </li>
-        </ul>
-        <div class="title">
-          <div class="line"></div>
-          <div class="text">商家公告</div>
-          <div class="line"></div>
-        </div>
-        <div class="bulletin">
-          <p class="content">{{ seller.bulletin }}</p>
+          <div class="title">
+            <div class="line"></div>
+            <div class="text">优惠信息</div>
+            <div class="line"></div>
+          </div>
+          <ul v-if="seller.supports" class="supports">
+            <li
+              v-for="support in seller.supports"
+              :key="support.id"
+              class="support-item"
+            >
+              <SupportIco :size="2" :type="support.type" />
+              <span class="text">{{ support.description }}</span>
+            </li>
+          </ul>
+          <div class="title">
+            <div class="line"></div>
+            <div class="text">商家公告</div>
+            <div class="line"></div>
+          </div>
+          <div class="bulletin">
+            <p class="content">{{ seller.bulletin }}</p>
+          </div>
         </div>
       </div>
+      <div class="detail-close" @click="setVisible">
+        <i class="icon-close"></i>
+      </div>
     </div>
-    <div class="detail-close">
-      <i class="icon-close"></i>
-    </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -50,6 +52,16 @@ export default {
       default() {
         return {}
       },
+    },
+  },
+  data() {
+    return {
+      visible: false,
+    }
+  },
+  methods: {
+    setVisible() {
+      this.visible = !this.visible
     },
   },
   components: {
@@ -75,6 +87,14 @@ export default {
   opacity: 1;
   background-color: $color-background-s;
   color: $color-white;
+
+  &.fade-enter-active, &.fade-leave-active {
+    transition: all 0.5s;
+  }
+
+  &.fade-enter, &.fade-leave-to {
+    opacity: 0;
+  }
 
   .detail-wrapper {
     display: inline-block;

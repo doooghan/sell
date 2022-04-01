@@ -1,13 +1,11 @@
 <template>
   <div id="app">
     <VHeader :seller="seller" />
-    <HeaderDetail :seller="seller" />
   </div>
 </template>
 
 <script>
 import VHeader from './view/v-header/v-header.vue'
-import HeaderDetail from './view/header-detail/header-detail.vue'
 import { getSeller } from './api/index'
 
 export default {
@@ -28,7 +26,6 @@ export default {
   },
   components: {
     VHeader,
-    HeaderDetail,
   },
 }
 </script>
