@@ -65,7 +65,7 @@
     <div class="shop-cart-wrapper">
       <ShopCart
         :selectFoods="selectFoods"
-        :minPirce="seller.minPrice"
+        :minPrice="seller.minPrice"
         :deliveryPrice="seller.deliveryPrice"
       />
     </div>

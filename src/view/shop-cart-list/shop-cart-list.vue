@@ -8,7 +8,7 @@
       type="shop-cart-list"
       :z-index="90"
     >
-      <transition name="move">
+      <transition name="move" @after-leave="afterLeave">
         <div v-show="visible">
           <div class="list-header">
             <h1 class="title">购物车</h1>
@@ -41,7 +41,7 @@
 <script>
 import CartControl from '../cart-control/cart-control.vue'
 const EVENT_HIDE = 'hide'
-
+const EVENT_LEAVE = 'leave'
 export default {
   name: 'shop-cart-list',
   props: {
@@ -63,10 +63,15 @@ export default {
     },
     hide() {
       this.visible = false
+      this.$emit(EVENT_HIDE)
     },
     maskClick() {
-      // this.hide()
-      this.$emit(EVENT_HIDE)
+      this.hide()
+      // this.$emit(EVENT_HIDE)
+    },
+    afterLeave() {
+      // 动画结束才调用
+      this.$emit(EVENT_LEAVE)
     },
   },
   components: {

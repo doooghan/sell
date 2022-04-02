@@ -45,10 +45,24 @@ export default {
       type: Number,
       default: 0,
     },
-    minPirce: {
+    minPrice: {
       type: Number,
       default: 0,
     },
+    fold: {
+      type: Boolean,
+      default: true,
+    },
+    sticky: {
+      // 区分当前时 sticky 的还是原来的shop-cart
+      type: Boolean,
+      default: false,
+    },
+  },
+  data() {
+    return {
+      listFold: this.fold,
+    }
   },
   computed: {
     totalPrice() {
@@ -67,34 +81,36 @@ export default {
     },
     payDesc() {
       if (this.totalPrice === 0) {
-        return `￥${this.minPirce}起送`
-      } else if (this.totalPrice < this.minPirce) {
-        const diff = this.minPirce - this.totalPrice
+        return `￥${this.minPrice}起送`
+      } else if (this.totalPrice < this.minPrice) {
+        const diff = this.minPrice - this.totalPrice
         return `还差￥${diff}起送`
       } else {
         return `去结算`
       }
     },
     payClass() {
-      if (!this.totalCount || this.totalPrice < this.minPirce) {
+      if (!this.totalCount || this.totalPrice < this.minPrice) {
         return 'not-enough'
       } else {
         return 'enough'
       }
     },
   },
-  created() {
-    this.listFold = true
-  },
+  // created() {
+  //   this.listFold = true
+  // },
 
   methods: {
     toggleList() {
+      // debugger
       if (this.listFold) {
         if (!this.totalCount) {
           return
         }
         this.listFold = false
         this._showShopCartList()
+        this._showShopCartSticky()
       } else {
         this.listFold = true
         this._hideShopCartList()
@@ -107,8 +123,12 @@ export default {
           $props: { selectFoods: 'selectFoods' },
           $events: {
             hide: () => {
-              // this.listFold = true
-              this.toggleList()
+              this.listFold = true
+              // this.toggleList()
+            },
+            leave: () => {
+              this._hideShopCartSticky()
+              // this.toggleList()
             },
           },
         })
@@ -116,8 +136,40 @@ export default {
       console.log('展示')
     },
     _hideShopCartList() {
-      this.shopCartListComp.hide()
+      // if (this.sticky) {
+      //   // 区分当前时 sticky 的还是原来的shop-cart
+      //   this.$parent.list.hide()
+      // } else {
+      //   this.shopCartListComp.hide()
+      // }
+      const list = this.sticky ? this.$parent.list : this.shopCartListComp
+      list.hide && list.hide()
       console.log('隐藏')
+    },
+    _showShopCartSticky() {
+      this.shopCartStickyComp =
+        this.shopCartStickyComp ||
+        this.$createShopCartSticky({
+          $props: {
+            selectFoods: 'selectFoods',
+            deliveryPrice: 'deliveryPrice',
+            minPrice: 'minPrice',
+            fold: 'listFold',
+            list: this.shopCartListComp,
+          },
+        })
+      this.shopCartStickyComp.show()
+      console.log('sticky展示')
+    },
+    _hideShopCartSticky() {
+      this.shopCartStickyComp.hide()
+      console.log('sticky隐藏')
+    },
+  },
+  watch: {
+    fold(newVal) {
+      this.listFold = newVal
+      console.log(this.listFold)
     },
   },
   components: {
