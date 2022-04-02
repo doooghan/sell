@@ -20,7 +20,11 @@
         ref="slide"
       >
         <cube-slide-item v-for="(tab, index) in tabs" :key="index">
-          <components :is="tab.component" :data="tab.data"></components>
+          <components
+            :is="tab.component"
+            :data="tab.data"
+            ref="component"
+          ></components>
         </cube-slide-item>
       </cube-slide>
     </div>
@@ -65,9 +69,16 @@ export default {
       },
     },
   },
+  mounted() {
+    this.onChange(this.index) // 挂载时手动触发onchange保证数据请求
+  },
   methods: {
     onChange(current) {
       this.index = current
+      const instance = this.$refs.component[current] // 获取当前组件
+      if (instance && instance.fetch) {
+        instance.fetch()
+      }
     },
     onScroll(pos) {
       const tabBarWidth = this.$refs.tabBar.$el.clientWidth
