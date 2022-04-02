@@ -11,7 +11,7 @@
               ></i>
             </div>
             <div class="num" v-show="totalCount > 0">
-              <!-- <bubble :num="totalCount"></bubble> -->
+              <Bubble :num="totalCount" />
             </div>
           </div>
           <div class="price" :class="{ highlight: totalPrice > 0 }">
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import Bubble from '../../components/bubble/bubble.vue'
+
 export default {
   name: 'shop-cart',
   props: {
@@ -74,12 +76,15 @@ export default {
       }
     },
     payClass() {
-      if (!this.totalCount || this.totalPrice < this.this.minPirce) {
+      if (!this.totalCount || this.totalPrice < this.minPirce) {
         return 'not-enough'
       } else {
         return 'enough'
       }
     },
+  },
+  components: {
+    Bubble,
   },
 }
 </script>

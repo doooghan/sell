@@ -23,7 +23,7 @@
                 />
                 <span>{{ props.txt.name }}</span>
                 <span class="num" v-if="props.txt.count">
-                  <!-- <bubble :num="props.txt.count"></bubble> -->
+                  <Bubble :num="props.txt.count" />
                 </span>
               </div>
             </template>
@@ -53,6 +53,9 @@
                     >￥{{ food.oldPrice }}</span
                   >
                 </div>
+                <div class="cart-control-wrapper">
+                  <CartControl :food="food" />
+                </div>
               </div>
             </li>
           </ul>
@@ -61,6 +64,7 @@
     </div>
     <div class="shop-cart-wrapper">
       <ShopCart
+        :selectFoods="selectFoods"
         :minPirce="seller.minPrice"
         :deliveryPrice="seller.deliveryPrice"
       />
@@ -72,6 +76,8 @@
 import { getGoods } from '../../api/index'
 import SupportIco from '../../components/support-ico/support-ico.vue'
 import ShopCart from '../shop-cart/shop-cart.vue'
+import CartControl from '../cart-control/cart-control.vue'
+import Bubble from '../../components/bubble/bubble.vue'
 
 export default {
   name: 'goods',
@@ -96,13 +102,24 @@ export default {
     seller() {
       return this.data.seller
     },
+    selectFoods() {
+      const ret = []
+      this.goods.forEach((good) => {
+        good.foods.forEach((food) => {
+          if (food.count) {
+            ret.push(food)
+          }
+        })
+      })
+      return ret
+    },
     barTxts() {
       const ret = []
       this.goods.forEach((good) => {
         const { name, type, foods } = good
         let count = 0
         foods.forEach((food) => {
-          count += food.count
+          count += food.count || 0
         })
         ret.push({ type, name, count })
       })
@@ -121,6 +138,8 @@ export default {
   components: {
     SupportIco,
     ShopCart,
+    CartControl,
+    Bubble,
   },
 }
 </script>
