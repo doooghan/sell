@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="shopcart">
-      <div class="content">
+      <div class="content" @click="toggleList">
         <div class="content-left">
           <div class="logo-wrapper">
             <div class="logo" :class="{ highlight: totalCount > 0 }">
@@ -81,6 +81,43 @@ export default {
       } else {
         return 'enough'
       }
+    },
+  },
+  created() {
+    this.listFold = true
+  },
+
+  methods: {
+    toggleList() {
+      if (this.listFold) {
+        if (!this.totalCount) {
+          return
+        }
+        this.listFold = false
+        this._showShopCartList()
+      } else {
+        this.listFold = true
+        this._hideShopCartList()
+      }
+    },
+    _showShopCartList() {
+      this.shopCartListComp =
+        this.shopCartListComp ||
+        this.$createShopCartList({
+          $props: { selectFoods: 'selectFoods' },
+          $events: {
+            hide: () => {
+              // this.listFold = true
+              this.toggleList()
+            },
+          },
+        })
+      this.shopCartListComp.show()
+      console.log('展示')
+    },
+    _hideShopCartList() {
+      this.shopCartListComp.hide()
+      console.log('隐藏')
     },
   },
   components: {
