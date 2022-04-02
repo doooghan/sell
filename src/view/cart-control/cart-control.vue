@@ -1,8 +1,10 @@
 <template>
   <div class="cartcontrol">
-    <div class="cart-decrease" v-show="food.count > 0" @click.stop="decrease">
-      <span class="inner icon-remove_circle_outline"></span>
-    </div>
+    <transition name="move">
+      <div class="cart-decrease" v-show="food.count > 0" @click.stop="decrease">
+        <span class="inner icon-remove_circle_outline"></span>
+      </div>
+    </transition>
     <div class="cart-count" v-show="food.count > 0">{{ food.count }}</div>
     <div class="cart-add icon-add_circle" @click.stop="add"></div>
   </div>
@@ -57,6 +59,19 @@ export default {
       color: $color-blue;
       transition: all 0.4s linear;
       transform: rotate(0);
+    }
+
+    &.move-enter-active, &.move-leave-active {
+      transition: all 0.4s linear;
+    }
+
+    &.move-enter, &.move-leave-to {
+      opacity: 0;
+      transform: translate3d(24px, 0, 0);
+
+      .inner {
+        transform: rotate(180deg);
+      }
     }
   }
 
