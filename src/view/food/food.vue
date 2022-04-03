@@ -25,7 +25,7 @@
               <CartControl :food="food" />
             </div>
             <transition name="fade">
-              <div @click.stop="addFirst" class="buy" v-show="!food.count">
+              <div @click="addFirst" class="buy" v-show="!food.count">
                 加入购物车
               </div>
             </transition>
@@ -37,6 +37,52 @@
           </div>
           <Split />
         </div>
+        <div class="rating">
+          <h1 class="title">商品评价</h1>
+          <RatingSelect
+            :ratings="ratings"
+            :selectType="selectType"
+            :onlyContent="onlyContent"
+            :desc="desc"
+            @select="onSelect"
+            @toggle="onToggle"
+          />
+          <div class="rating-wrapper">
+            <ul v-show="computedRatings && computedRatings.length">
+              <li
+                v-for="(rating, index) in computedRatings"
+                class="rating-item border-bottom-1px"
+                :key="index"
+              >
+                <div class="user">
+                  <span class="name">{{ rating.username }}</span>
+                  <img
+                    class="avatar"
+                    width="12"
+                    height="12"
+                    :src="rating.avatar"
+                  />
+                </div>
+                <div class="time">{{ format(rating.rateTime) }}</div>
+                <p class="text">
+                  <span
+                    :class="{
+                      'icon-thumb_up': rating.rateType === 0,
+                      'icon-thumb_down': rating.rateType === 1,
+                    }"
+                  ></span
+                  >{{ rating.text }}
+                </p>
+              </li>
+            </ul>
+            <div
+              class="no-rating"
+              v-show="!computedRatings || !computedRatings.length"
+            >
+              暂无评价
+            </div>
+          </div>
+        </div>
       </cube-scroll>
     </div>
   </transition>
@@ -45,8 +91,12 @@
 <script >
 import Split from '../../components/split/split.vue'
 import CartControl from '../cart-control/cart-control.vue'
+import RatingSelect from '../rating-select/rating-select.vue'
+import moment from 'moment'
 
+const ALL = 2
 const EVENT_LEAVE = 'leave'
+
 export default {
   name: 'food',
   props: {
@@ -60,7 +110,29 @@ export default {
   data() {
     return {
       visible: false,
+      selectType: ALL,
+      onlyContent: true,
+      desc: {
+        all: '全部',
+        positive: '推荐',
+        negative: '吐槽',
+      },
     }
+  },
+  computed: {
+    ratings() {
+      return this.food.ratings
+    },
+    computedRatings() {
+      return this.ratings.filter((rating) => {
+        if (this.onlyContent && !rating.text) {
+          return false
+        }
+        if (this.selectType === ALL || rating.rateType === this.selectType) {
+          return true
+        }
+      })
+    },
   },
   methods: {
     show() {
@@ -78,10 +150,20 @@ export default {
     addFirst() {
       this.$set(this.food, 'count', 1)
     },
+    format(time) {
+      return moment(time).format('YYYY-MM-DD hh:mm')
+    },
+    onSelect(type) {
+      this.selectType = type
+    },
+    onToggle() {
+      this.onlyContent = !this.onlyContent
+    },
   },
   components: {
     CartControl,
     Split,
+    RatingSelect,
   },
 }
 </script>
