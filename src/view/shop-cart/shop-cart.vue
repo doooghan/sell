@@ -20,7 +20,7 @@
           <div class="desc">另需配送费￥{{ deliveryPrice }}元</div>
         </div>
         <div class="content-right">
-          <div class="pay" :class="payClass">
+          <div @click="pay" class="pay" :class="payClass">
             {{ payDesc }}
           </div>
         </div>
@@ -136,14 +136,12 @@ export default {
       console.log('展示')
     },
     _hideShopCartList() {
-      // if (this.sticky) {
-      //   // 区分当前时 sticky 的还是原来的shop-cart
-      //   this.$parent.list.hide()
-      // } else {
-      //   this.shopCartListComp.hide()
-      // }
-      const list = this.sticky ? this.$parent.list : this.shopCartListComp
-      list.hide && list.hide()
+      if (this.sticky) {
+        // 区分当前时 sticky 的还是原来的shop-cart
+        this.$parent.list.hide()
+      } else {
+        this.shopCartListComp.hide()
+      }
       console.log('隐藏')
     },
     _showShopCartSticky() {
@@ -165,11 +163,27 @@ export default {
       this.shopCartStickyComp.hide()
       console.log('sticky隐藏')
     },
+    pay(e) {
+      if (this.totalPrice < this.minPrice) {
+        return
+      }
+      this.$createDialog({
+        type: 'alert',
+        title: '支付',
+        content: `您需支付${this.totalPrice}元`,
+      }).show()
+      e.stopPropagation()
+    },
   },
   watch: {
     fold(newVal) {
       this.listFold = newVal
       console.log(this.listFold)
+    },
+    totalCount(newVal) {
+      if (!this.listFold && !newVal) {
+        this._hideShopCartList()
+      }
     },
   },
   components: {

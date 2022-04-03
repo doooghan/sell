@@ -12,7 +12,7 @@
         <div v-show="visible">
           <div class="list-header">
             <h1 class="title">购物车</h1>
-            <span class="empty">清空</span>
+            <span @click="empty" class="empty">清空</span>
           </div>
           <cube-scroll class="list-content" ref="listContent">
             <ul>
@@ -60,6 +60,9 @@ export default {
   methods: {
     show() {
       this.visible = true
+      this.$nextTick(() => {
+        this.$refs.listContent.refresh()
+      })
     },
     hide() {
       this.visible = false
@@ -67,11 +70,25 @@ export default {
     },
     maskClick() {
       this.hide()
-      // this.$emit(EVENT_HIDE)
     },
     afterLeave() {
       // 动画结束才调用
       this.$emit(EVENT_LEAVE)
+    },
+    empty() {
+      this.dialogComp = this.$createDialog({
+        type: 'confirm',
+        content: '确认清空购物车？',
+        $events: {
+          confirm: () => {
+            this.selectFoods.forEach((food) => {
+              food.count = 0
+            })
+            this.hide()
+          },
+        },
+      })
+      this.dialogComp.show()
     },
   },
   components: {
