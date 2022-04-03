@@ -36,7 +36,12 @@
           :title="good.name"
         >
           <ul>
-            <li v-for="food in good.foods" :key="food.name" class="food-item">
+            <li
+              v-for="food in good.foods"
+              :key="food.name"
+              class="food-item"
+              @click="selectFood(food)"
+            >
               <div class="icon">
                 <img width="57" height="57" :src="food.icon" />
               </div>
@@ -92,6 +97,7 @@ export default {
   data() {
     return {
       goods: [],
+      selectedFood: {},
       scrollOptions: {
         click: false, // 防止点击出现重复
         directionLockThreshold: 0,
@@ -134,7 +140,44 @@ export default {
         this.fetched = true
       }
     },
+    selectFood(food) {
+      this.selectedFood = food
+      this._showFood()
+      this._showShopCartSticky()
+    },
+    _showFood() {
+      this.foodComp =
+        this.foodComp ||
+        this.$createFood({
+          $props: {
+            food: 'selectedFood',
+          },
+          $events: {
+            leave: () => {
+              this._hideShopCartSticky()
+            },
+          },
+        })
+      this.foodComp.show()
+    },
+    _showShopCartSticky() {
+      this.shopCartStickyComp =
+        this.shopCartStickyComp ||
+        this.$createShopCartSticky({
+          $props: {
+            selectFoods: 'selectFoods',
+            deliveryPrice: this.seller.deliveryPrice,
+            minPrice: this.seller.minPrice,
+            fold: true,
+          },
+        })
+      this.shopCartStickyComp.show()
+    },
+    _hideShopCartSticky() {
+      this.shopCartStickyComp.hide()
+    },
   },
+
   components: {
     SupportIco,
     ShopCart,
