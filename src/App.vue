@@ -14,12 +14,15 @@ import Goods from './view/goods/goods.vue'
 import Ratings from './view/ratings/ratings.vue'
 import Seller from './view/seller/seller.vue'
 import { getSeller } from './api/index'
+import qs from 'query-string'
 
 export default {
   name: 'App',
   data() {
     return {
-      seller: {},
+      seller: {
+        id: qs.parse(location.search).id,
+      },
     }
   },
   computed: {
@@ -54,7 +57,7 @@ export default {
   },
   methods: {
     async _getSeller() {
-      const seller = await getSeller()
+      const seller = await getSeller({ id: this.seller.id })
       this.seller = { ...this.seller, ...seller }
     },
   },

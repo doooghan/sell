@@ -19,9 +19,12 @@ module.exports = {
   devServer: {
     before(app) {
       app.get("/api/seller", function (req, res) {
+        const id = parseInt(req.query.id);
+
+        const newSeller = { ...seller, ...{ id } };
         res.json({
           errno: 0,
-          data: seller,
+          data: newSeller,
         });
       });
       app.get("/api/goods", function (req, res) {

@@ -135,7 +135,7 @@ export default {
   methods: {
     async fetch() {
       if (!this.fetched) {
-        const goods = await getGoods()
+        const goods = await getGoods({ id: this.seller.id })
         this.goods = goods
         this.fetched = true
       }

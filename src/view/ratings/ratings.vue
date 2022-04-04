@@ -123,7 +123,7 @@ export default {
   methods: {
     async fetch() {
       if (!this.fetched) {
-        const ratings = await getRatings()
+        const ratings = await getRatings({ id: this.seller.id })
         this.ratings = ratings
         this.fetched = true
       }
