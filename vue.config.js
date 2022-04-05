@@ -1,3 +1,5 @@
+const webpack = require("webpack");
+
 const appData = require("./data.json");
 const { seller, goods, ratings } = appData;
 module.exports = {
@@ -40,5 +42,12 @@ module.exports = {
         });
       });
     },
+  },
+
+  chainWebpack(config) {
+    // 性能优化，去除 moment 的国际化
+    config
+      .plugin("context")
+      .use(webpack.ContextReplacementPlugin, [/moment[/\\]locale$/, /zh-cn/]);
   },
 };
